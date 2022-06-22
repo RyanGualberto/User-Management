@@ -12,31 +12,31 @@ class User {
     }
 
     get register(){
-        return this._register
+        return this._register;
     }
     get name(){
-        return this._name
+        return this._name;
     }
     get gender(){
-        return this._gender
+        return this._gender;
     }
     get birth(){
-        return this._birth
+        return this._birth;
     }
     get country(){
-        return this._country
+        return this._country;
     }
     get email(){
-        return this._email
+        return this._email;
     }
     get password(){
-        return this._password
+        return this._password;
     }
     get photo(){
-        return this._photo
+        return this._photo;
     }
     get admin(){
-        return this._admin
+        return this._admin;
     }
 
     set photo(value){

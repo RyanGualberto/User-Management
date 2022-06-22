@@ -7,8 +7,8 @@ class UserController {
         this.onEdit();
     }
 
-    onEdit(){
-        document.querySelector("#box-user-update #btn-cancel").addEventListener('click', e =>{
+    onEdit() {
+        document.querySelector("#box-user-update #btn-cancel").addEventListener('click', e => {
             this.showPanelCreate();
         })
     }
@@ -129,34 +129,60 @@ class UserController {
             </td>
           `;
 
-        tr.querySelector("#btn-edit").addEventListener("click", e => {
+          tr.querySelector(".btn-edit").addEventListener("click", e => {
 
             let json = JSON.parse(tr.dataset.user);
-            let form = document.querySelector("#form-user-update")
+            let form = document.querySelector("#form-user-update");
 
-            for (let name in json){
-                let field = form.querySelector("[name=" + name.replace("_", "") + "]")
-                
-                if(field){
-                    if (field.type == 'file') continue;
+            form.dataset.trIndex = tr.sectionRowIndex;
 
-                    field.value = json[name];
+            for (let name in json) {
+
+                let field = form.querySelector("[name=" + name.replace("_", "") + "]");
+
+                if (field) {
+
+                    switch (field.type) {
+                        case 'file':
+                            continue;
+                            break;
+                            
+                        case 'radio':
+                            field = form.querySelector("[name=" + name.replace("_", "") + "][value=" + json[name] + "]");
+                            field.checked = true;
+                            console.log("aqui" + field)
+                            
+                            break;
+                            
+                            case 'checkbox':
+                                field.checked = json[name];
+                                console.log(field)
+                        break;
+
+                        default:
+                            field.value = json[name];
+
+                    }
+
                 }
-            }
 
+
+            }
+            
             this.showPanelUpdate();
+
 
         });
         this.tableEl.appendChild(tr);
         this.updateCount();
     }
 
-    showPanelCreate(){
+    showPanelCreate() {
         document.querySelector('#box-user-create').style.display = "block";
         document.querySelector('#box-user-update').style.display = "none";
     }
 
-    showPanelUpdate(){
+    showPanelUpdate() {
         document.querySelector('#box-user-create').style.display = "none";
         document.querySelector('#box-user-update').style.display = "block";
     }
