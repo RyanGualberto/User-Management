@@ -34,22 +34,13 @@ class UserController {
                     } else {
                         result._photo = content;
                     }
-                    tr.dataset.user = JSON.stringify(result);
 
-                    tr.innerHTML = `
+                    let user = new User();
+                    user.loadFromJSON(result);
+                    user.save
+                    tr = this.getTr(user, tr)
 
-                                <td>
-                                    <img src="${result._photo}" alt="User Image" class="img-circle img-sm">
-                                </td>
-                                <td>${result._name}</td>
-                                <td>${result._email}</td>
-                                <td>${(result._admin) ? 'sim' : 'não'}</td>
-                                <td>${Utils.dateFormat(result._register)}</td>
-                                <td>
-                                <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat" id="btn-edit">Editar</button>
-                                <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
-                                </td>
-                            `;
+
 
                     this.addEventTr(tr);
                     this.updateCount();
@@ -77,7 +68,7 @@ class UserController {
             this.getPhoto(this.formEl).then(
                 (content) => {
                     values.photo = content;
-                    this.insert(values);
+                    values.save();
                     this.addLine(values);
                     this.formEl.reset();
                     btn.disabled = false;
@@ -161,8 +152,8 @@ class UserController {
     getUsersStorage() {
 
         let users = [];
-        if (sessionStorage.getItem("users")) {
-            users = JSON.parse(sessionStorage.getItem("users"));
+        if (localStorage.getItem("users")) {
+            users = JSON.parse(localStorage.getItem("users"));
         }
 
         return users;
@@ -178,17 +169,15 @@ class UserController {
         });
     }
 
-    insert(data) {
-        let users = this.getUsersStorage();
-        users.push(data);
-
-        sessionStorage.setItem("users", JSON.stringify(users))
-    }
     addLine(dataUser) {
-        console.log(dataUser);
+        let tr = this.getTr(dataUser);
+        this.tableEl.appendChild(tr);
+        this.updateCount();
+    }
 
-        let tr = document.createElement('tr');
+    getTr(dataUser, tr = null) {
 
+        if (tr === null) tr = document.createElement('tr');
 
         tr.dataset.user = JSON.stringify(dataUser);
 
@@ -207,8 +196,8 @@ class UserController {
           `;
 
         this.addEventTr(tr);
-        this.tableEl.appendChild(tr);
-        this.updateCount();
+
+        return tr;
     }
 
     addEventTr(tr) {

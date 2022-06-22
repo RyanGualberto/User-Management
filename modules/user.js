@@ -55,7 +55,38 @@ class User {
                 default:
                     this[name] = json[name];
             }
-
         }
+    }
+
+    static getUsersStorage() {
+        let users = [];
+        if (localStorage.getItem("users")) {
+            users = JSON.parse(localStorage.getItem("users"));
+        }
+        return users;
+    }
+
+    getNewID() {
+        if (!window.id) window.id = 0;
+        id++;
+        return id;
+    }
+    save() {
+        let users = this.getUsersStorage();
+
+        if (this.id > 0) {
+            users.map(u => {
+                if (u._id === this.id) {
+                    u = this;
+                }
+                return u;
+            });
+        }
+        else {
+            this._id = this.getNewID();
+            users.push(data);
+        }
+        localStorage.setItem("users", JSON.stringify(users))
+
     }
 }
